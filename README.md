@@ -1,2 +1,2 @@
 # MAS-AI
-Repository for the Airtificial Intelligence course at H-BRS
+Repository for the Artificial Intelligence course at H-BRS
