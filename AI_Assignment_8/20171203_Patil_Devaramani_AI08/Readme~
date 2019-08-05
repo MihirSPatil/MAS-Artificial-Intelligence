@@ -1,0 +1,4 @@
+The sudoku solver was written with help from Quinston Pimento and was structured by using the AIMA github repository and stackoverflow.
+The sudokusolver.py currently solves a each 9x9 grid individually, but when trying to solve for all 50 grids at once it gives a listindexoutofbounds error when solving grid 49. 
+(Hence each grid may be given as a individual input.)
+to run the code first run the gridgenerator.py and then run sudokusolver.py

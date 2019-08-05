@@ -1,0 +1,137 @@
+#The code structure used is adpted from github-aima
+#!usr/bin/python
+from copy import deepcopy
+from pprint import pprint
+import time
+
+DIRECTIONS = {"U": [-1, 0], "D": [ 1, 0], "L": [ 0,-1], "R" : [ 0, 1]}
+END = [[8,7,6],[5,4,3],[2,1,0]]
+
+class Node:
+    def __init__(self, state, previous, h_fn, dir):
+        self.state = state
+        self.previous = previous
+        self.h_fn = h_fn #cost to the end position (heuristic)
+        self.dir = dir #direction as a string
+
+    #global cost
+    def f_fn(self):
+        return self.h_fn
+
+#the heuristic used is the misplaced tiles
+def misplaced_tiles(curr_state,goal_state):
+    cost = 0
+    for row in range(len(curr_state)):
+        for col in range(len(curr_state[row])):
+            if curr_state[row][col] != goal_state[row][col]:
+                cost += 1
+                #print cost
+    return cost
+
+#the heuristic used is the manhatten distance
+def manhatten_dist(curr_state,goal_state):
+    #print "curr_state",curr_state
+    #print "goal_state",goal_state
+    cost = 0
+    for row in range(len(curr_state)):
+        for col in range(len(curr_state[row])):
+            pos = get_pos(goal_state,curr_state[row][col])
+            #print "pos",pos
+            cost += abs(row - pos[0]) + abs(col - pos[1])
+            #print "cost:",cost
+    return cost
+
+#get position of an element in the goal array
+def get_pos(goal_state,element):
+    for row in range(len(goal_state)):
+        if element in goal_state[row]:
+            #print "goal_state_row:",goal_state[row]
+            #print "index",goal_state[row].index(element)
+            return (row,goal_state[row].index(element))
+
+#returns the node that have the lowest estimated cost (f)
+def get_best_estimate(open_list):
+    firstIter = True
+    #to deal with the referenced before assignment error used firstIter
+
+    for node in open_list.values():
+
+        if firstIter or node.f_fn() < bestF:
+            firstIter = False
+            best_Node = node
+            #pprint(vars(best_Node))
+            #to get the correct path uncomment
+            bestF = best_Node.f_fn()
+
+    return best_Node
+
+#returns all the adjacent nodes that are valid positions
+def adjacent_nodes(node,choice):
+    listNode = []
+    emptyPos= get_pos(node.state,0)
+
+    for dir in DIRECTIONS.keys():
+        newPos = (emptyPos[0] + DIRECTIONS[dir][0], emptyPos[1] + DIRECTIONS[dir][1])
+        if 0 <= newPos[0] < len(node.state) and 0 <= newPos[1] < len(node.state[0]) :
+            newState = deepcopy(node.state)
+            newState[emptyPos[0]][emptyPos[1]] = node.state[newPos[0]][newPos[1]]
+            newState[newPos[0]][newPos[1]] = 0
+            if choice == "1":
+                listNode += [Node(newState, node.state, manhatten_dist(newState, END), dir)]
+            else:
+                listNode += [Node(newState, node.state, misplaced_tiles(newState, END), dir)]
+
+    return listNode
+
+#build the resulting path from the closed_list
+def path_to_goal(closed_list):
+    node = closed_list[str(END)]
+    path = ""
+
+    while node.dir:
+        path = node.dir + path
+        node = closed_list[str(node.previous)]
+        #pprint(vars(node))
+        #uncomment to see the correct path taken
+    return path
+
+#implementation of the A* algorithm for best first path
+def A_star(puzzle, choice):
+    #add the start node
+    if choice == "1":
+        open_list = {str(puzzle) : Node(puzzle,puzzle, manhatten_dist(puzzle,END), "")}
+    else:
+        open_list = {str(puzzle) : Node(puzzle,puzzle, misplaced_tiles(puzzle,END), "")}
+    closed_list = {}
+
+    #stop condition in case there are no solution
+    while len(open_list) > 0:
+        examNode = get_best_estimate(open_list)
+        closed_list[str(examNode.state)] = examNode
+        if examNode.state == END:
+            #build the final path once the algorithm is finished
+            return path_to_goal(closed_list)
+        adj = adjacent_nodes(examNode,choice)
+
+        #update the closed set
+        for node in adj:
+            if str(node.state) in closed_list.keys() or str(node.state) in open_list.keys() and open_list[str(node.state)].f_fn() < node.f_fn():
+                continue
+            open_list[str(node.state)] = node
+
+        #remove the examined node from the open_list
+        del open_list[str(examNode.state)]
+
+    #if there is no solution return the empty string
+    return ""
+
+start_time = time.time()
+
+if __name__ == '__main__':
+    print "enter 1 for manhatten greedy_solver and 0 for misplaced_tiles greedy_solver"
+    choice = raw_input()
+    print(A_star([[1, 4, 8],
+                   [3, 6, 2],
+                   [0, 5, 7]], choice))
+
+    print(" runtime:%s seconds" % (time.time() - start_time))

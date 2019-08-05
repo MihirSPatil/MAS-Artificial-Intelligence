@@ -1,0 +1,330 @@
+\documentclass[11pt, a4paper]{report}
+\usepackage{adjustbox}
+\usepackage[margin=0.5in]{geometry}
+\title{Artificial Intelligence for Robotics \\Assignment 10}
+\author{Mihir Patil\\Sushma Devaramani}
+
+\begin{document}
+
+\begin{titlepage}
+\maketitle
+\end{titlepage}
+
+\begin{enumerate}
+
+\item\begin{itemize}
+Describe the following concepts in the context of logical reasoning as precisely and compact as possible.
+\item \textbf{Enumeration:} One of the methods used for Propositional inference is \textit{Enumeration}. For a knowledge base \textit{KB} it checks if a sentence \textit{$\alpha$} is entailed, by enumerating over all possible models for the KB. It checks if the sentence $\alpha$ is true in all models where KB is true.
+
+\item \textbf{Validity:} A sentence \textit{$\alpha$} is said to be valid if it is true in all models otherwise it is invalid. Valid sentences are necessarily \textit{True}.
+
+\item \textbf{Satisfiability:} A sentence is satisfiable if it is true(or satisfied by) in some model. Satisfiability can be checked by enumerating over the possible models until one if found to be true.
+
+\item \textbf{CNF and DNF:} \begin{itemize}
+\item A sentence expressed as a conjunction of clauses is said to be in \textit{Conjunctive Normal Form(CNF)}.\\ e.g: (A $\vee$ $\neg$ B) $\bigwedge$ ($\neg$C $\vee$ D)
+
+\item A sentence expressed as a disjunction of conjunctions of one or more literals is said to be in \textit{Disjunctive Normal Form(DNF)}. e.g: (A $\bigwedge$ $\neg$ B) $\vee$ ($\neg$C $\bigwedge$ D)
+
+\end{itemize} 
+
+\item \textbf{Resolution:} It is a single \textit{Inference rule}, which when combined with a \textit{Complete search algorithm } will yield a \textit{Complete inference algorithm}.
+
+\end{itemize}
+
+\item 
+\begin{flushleft}
+
+[(Food $\Rightarrow$ Party) $\vee$ (Drinks $\Rightarrow$ Party)]$ \Rightarrow$ [(Food $\vee$ Drinks) $ \Rightarrow$ Party]
+\end{flushleft} 
+\begin{itemize}
+\item[a.] The above given implication is valid and satisfiable, this can be shown by \textit{Enumeration}. 
+
+
+\begin{table}[h]
+\centering
+\begin{adjustbox}{width=\textwidth}
+
+\begin{tabular}{|l|l|l|l|l|l|l|l|l|}
+\hline
+Food(Fd) & Party(P) & Drinks(D) & Fd $\Rightarrow$ P & D $\Rightarrow$ P & (Fd $\Rightarrow$ P)$\vee$(D $\Rightarrow$ P) & Fd $\wedge$ D & (Fd $\wedge$ D) $\Rightarrow$ P & [(Fd $\Rightarrow$ P)$\vee$(D $\Rightarrow$P)] $\Rightarrow$ [(Fd $\wedge$ D) $\Rightarrow$ P] \\ \hline
+F        & F        & F         & T                  & T                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+F        & F        & T         & T                  & F                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+F        & T        & F         & T                  & T                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+F        & T        & T         & T                  & T                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+T        & F        & F         & F                  & T                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+T        & F        & T         & F                  & F                 & F                                          & T             & F                             & T                                                                                        \\ \hline
+T        & T        & F         & T                  & T                 & T                                          & F             & T                             & T                                                                                        \\ \hline
+T        & T        & T         & T                  & T                 & T                                          & T             & T                             & T                                                                                        \\ \hline
+\end{tabular}
+\end{adjustbox}
+\caption{Truth Table}
+\end{table}
+
+\item[b.] \begin{itemize}
+
+
+\item \textbf{Right Hand Side:}\begin{center}
+(Food $\Rightarrow$ Party) $\vee$ (Drinks $\Rightarrow$ Party)\\
+($\neg$ Food $\vee$ Party)$\vee$($\neg$Drinks$\vee$Party)\\
+$\neg$ Food $\vee$ Party $\vee$ $\neg$Drinks$\vee$Party\\
+$\neg$ Food $\vee$ $\neg$Drinks $\vee$ Party
+\end{center}
+
+\item \textbf{Left Hand Side:}\begin{center}
+(Food $\wedge$ Drinks) $ \Rightarrow$ Party)\\
+$\neg$(Food $\wedge$ Drinks) $\vee$ Party\\
+$\neg$ Food $\vee$ $\neg$Drinks $\vee$ Party
+\end{center}
+\item \textit{ Since both the left and right hand side are the same(equal) they have the same truth value.}
+\end{itemize}
+
+\item[c.] Prove your answer to (a) using resolution\\
+
+Propositional resolution is a rule of inference to propositional logic. It is used to build a algorithm proof that is \textit{sound} and \textit{complete} for all the proposition logic.\\
+
+\textbf{Steps for Proposition resolution algorithm:}\\
+
+1. Convert all the sentences to CNF(Conjunctive Normal Form).\\
+2. Negate the desired conclusion (the one converted to CNF).\\
+3. Apply the resolution rule until,
+\begin{enumerate}
+\item Derive a empty clause/false(contradiction).
+\item Can't apply the rule any more.
+\end{enumerate}
+
+
+\newpage
+Some conversion rules used:
+
+1. a $\Rightarrow$ b   $\longrightarrow$   $\neg$ a $\vee$ b \\
+2. a $\Longleftrightarrow$ b $\longrightarrow$ ($\neg$ a $\vee$ b) $\wedge$ ( a $\vee$ $\neg$ b)\\
+3. $\neg \neg$ a $\longrightarrow$ a\\
+4. $\neg$( a $\wedge$ b ) $\longrightarrow$ ($\neg$ a $\vee$ $\neg$ b). (De-Morgan's Law)\\
+5. $\neg$( a $\vee$ b ) $\longrightarrow$ ($\neg$ a $\wedge$ $\neg$ b). (De-Morgan's Law)\\
+
+The given implication is,
+
+[(Food $\Rightarrow$ Party) $\vee$ (Drinks $\Rightarrow$ Party)]$ \Rightarrow$ [(Food $\vee$ Drinks) $ \Rightarrow$ Party]
+
+This can be written as,
+\begin{equation}
+	[(F \Rightarrow P) \vee (D \Rightarrow P)]\Rightarrow [(F \vee D)	\Rightarrow P] 
+\end{equation}
+\begin{equation}
+\neg[(\neg F \vee P) \vee (\neg D \vee P)] \vee (\neg ( F \wedge D) \vee P]
+\end{equation}
+\begin{equation}
+\neg(\neg F \vee P) \wedge \neg ( \neg D \vee P) \vee ( \neg F \vee \neg D \vee P)
+\end{equation}
+\begin{equation}
+(F \wedge \neg P \wedge D) \vee ( \neg F \vee \neg D \vee P)
+\end{equation}
+Negate the sentence,
+\begin{equation}
+\neg [(F \wedge \neg P \wedge D) \vee ( \neg F \vee \neg D \vee P)]
+\end{equation}
+\begin{equation}
+\neg [(F \wedge \neg P \wedge D)] \wedge \neg( \neg F \vee \neg D \vee P)]
+\end{equation}
+\begin{equation}
+(\neg F \vee P \vee \neg D) \wedge ( F \wedge D \wedge \neg P)
+\end{equation}
+
+The clauses are,
+
+\begin{equation}
+\lbrace \neg F , P, \neg D \rbrace 
+\end{equation}
+
+\begin{equation}
+\lbrace F \rbrace 
+\end{equation}
+\begin{equation}
+\lbrace D \rbrace 
+\end{equation}
+\begin{equation}
+\lbrace \neg P \rbrace 
+\end{equation}
+Eq (11), (8) leads to 
+\begin{equation}
+\lbrace \neg F , \neg D \rbrace 
+\end{equation}
+Eq (12), (9) leads to,
+\begin{equation}
+\lbrace \neg D \rbrace
+\end{equation}
+From eq (13) and (10), it leads to empty clause
+\begin{equation}
+\lbrace \rbrace
+\end{equation}
+
+This proves that the sentence is satisfiable and valid.
+\end{itemize}
+
+\item Let A, B and C be propositional formulas such that A and B entails C (e.g. $ A \wedge B \longrightarrow C)$. Then, is $ (A \longrightarrow C) \vee (B \longrightarrow C)$ always true?
+
+\textit{solution:}
+In order to prove if the sentence entails the knowledge base ($KB\longrightarrow \alpha$), we have to prove that $KB \wedge \neg \alpha$ is \underline{unsatisfiable}, that is the result should return empty clause.
+
+The knowledge base/premise is converted to CNF,
+
+$$A \wedge B \longrightarrow C$$
+$$\neg(A\wedge B) \vee C$$
+$$ \neg A \vee \neg B \vee C $$
+The clauses are,
+$\lbrace \neg A \rbrace, \lbrace \neg B \rbrace, \lbrace C \rbrace ---- (a)$ 
+
+Now, convert the conclusion/sentence into CNF and negate it,
+$$ (A \longrightarrow C)\vee (B \longrightarrow C)$$
+$$\neg[(\neg A \vee C) \vee (\neg B \vee C)]$$
+$$\neg (\neg A \vee C) \wedge \neg(\neg B \vee C)$$
+$$(A \wedge \neg C) \wedge (B \wedge \neg C)$$
+The clauses are,
+$\lbrace A \rbrace, \lbrace B \rbrace, \lbrace \neg C \rbrace ---- (b)$
+
+Applying the inference rule on (a) and (b) will result in an empty clause. Hence it can be proved that the sentence $(A\rightarrow C) \vee (B \rightarrow C)$ logically follows the knowledge base $(A \wedge B) \rightarrow C)$ and is always true.
+
+\item Prove the following formulas
+\begin{itemize}
+
+\item[a.] $\neg P \wedge \neg Q \Longleftrightarrow \neg ( P \vee Q)$
+
+\begin{equation}
+[\neg P \wedge \neg Q \Rightarrow \neg ( P \vee Q)] \wedge [\neg(P \vee Q) \Rightarrow \neg P \wedge \neg Q] 
+\end{equation}
+\begin{equation}
+[P \vee Q \vee \neg(P \vee Q)] \wedge [ \neg (P \vee Q) \vee \neg P \wedge \neg Q]
+\end{equation}
+\begin{equation}
+[P \vee Q \vee \neg (P \vee Q)] \wedge [P \vee Q \vee \neg P \wedge \neg Q]
+\end{equation}
+\begin{equation}
+[P \vee Q \vee \neg P \wedge \neg Q)] \wedge [P \vee Q \vee \neg P \wedge \neg Q]
+\end{equation}
+After converting to CNF,
+\begin{equation}
+P \vee Q \vee (\neg P \wedge \neg Q)
+\end{equation}
+Negate the above sentence,
+\begin{equation}
+\neg P \wedge \neg Q \wedge (P \vee Q)
+\end{equation}
+The clauses are,
+\begin{equation}
+\lbrace P, Q \rbrace
+\end{equation}
+\begin{equation}
+\lbrace \neg P \rbrace
+\end{equation}
+\begin{equation}
+\lbrace \neg Q \rbrace
+\end{equation}
+From eq (21) and (22),
+\begin{equation}
+\lbrace Q \rbrace
+\end{equation}
+From eq (24) and (23), it results to a empty clause,
+\begin{equation}
+\lbrace  \rbrace
+\end{equation}
+This proves the formula.\\
+
+\item[b.] $\neg (P \wedge Q) \Longleftrightarrow \neg P \vee \neg Q$
+
+\begin{equation}
+[\neg( P \wedge Q) \Rightarrow \neg P \vee \neg Q)] \wedge [\neg P \vee \neg Q \Rightarrow \neg (P \wedge Q)] 
+\end{equation}
+\begin{equation}
+\neg [(\neg P \wedge Q) \vee \neg P \vee \neg Q)] \wedge [ \neg (\neg P \vee \neg Q) \vee \neg (P \wedge Q]
+\end{equation}
+\begin{equation}
+[P \wedge Q \vee \neg P \vee \neg Q)] \wedge [(P \wedge Q) \vee \neg P \vee \neg Q]
+\end{equation}
+
+After converting to CNF,
+\begin{equation}
+(P \wedge Q)\vee \neg P \vee \neg Q
+\end{equation}
+Negate the above sentence,
+\begin{equation}
+(\neg P \vee \neg Q) \wedge P \wedge Q)
+\end{equation}
+The clauses are,
+\begin{equation}
+\lbrace \neg P, \neg Q \rbrace
+\end{equation}
+\begin{equation}
+\lbrace  P \rbrace
+\end{equation}
+\begin{equation}
+\lbrace  Q \rbrace
+\end{equation}
+From eq (31) and (32),
+\begin{equation}
+\lbrace Q \rbrace
+\end{equation}
+From eq (34) and (33), it results to a empty clause,
+\begin{equation}
+\lbrace  \rbrace
+\end{equation}
+This proves the formula.\\
+
+\item[c.] $ P \vee (P\wedge Q) \Longleftrightarrow P$
+
+Converting the above sentence to CNF,
+\begin{equation}
+P \vee (P \wedge Q)\Rightarrow P \wedge P \Rightarrow P \vee (P \wedge Q)
+\end{equation}
+\begin{equation}
+\{\neg [P \vee (P\wedge Q)] \vee P\} \wedge \{\neg P \vee [P \vee (P\wedge Q)]\}
+\end{equation}
+
+\begin{equation}
+\{\neg P \wedge( \neg P\vee \neg Q) \vee P\} \wedge \{\neg P \vee (P \vee P \wedge (P \vee Q)]\}
+\end{equation}
+
+\begin{equation}
+\{(\neg P \wedge \neg P)\vee(\neg P \wedge \neg Q) \vee P\} \wedge \{(\neg P \vee P) \wedge (P \vee Q)]\}
+\end{equation}
+\begin{equation}
+(\neg P \vee \neg P) \wedge(\neg Q \vee P) \wedge (\neg P \vee P) \wedge(P \vee Q)
+\end{equation}
+\begin{equation}
+ \neg P \wedge(\neg Q \vee P) \wedge (\neg P \vee P) \wedge(P \vee Q)
+\end{equation}
+
+Negate the above sentence,
+\begin{equation}
+(P \vee Q) \wedge (\neg P \vee P )\wedge (\neg P \vee \neg P) \wedge \neg Q
+\end{equation}
+The clauses are,
+\begin{equation}
+\{  P, Q \}
+\end{equation}
+
+\begin{equation}
+\{ P, \neg P \}
+\end{equation} 
+
+\begin{equation}
+\{ \neg Q \}
+\end{equation}
+
+\begin{equation}
+\{ \neg P \}
+\end{equation}
+
+From eq (43) and (45),
+\begin{equation}
+\{  P \}
+\end{equation}
+From eq (44), (47) and (46), we get empty clause
+\begin{equation}
+\{ \}
+\end{equation}
+
+This proves the given sentence
+\end{itemize}
+\end{enumerate}
+
+\end{document}
